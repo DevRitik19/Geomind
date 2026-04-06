@@ -5,7 +5,7 @@ const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <Navbar />
-      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full max-w-7xl relative">
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 w-full max-w-7xl relative">
         <Outlet />
       </main>
       <footer className="bg-slate-900 border-t border-slate-800 py-6 mt-auto">

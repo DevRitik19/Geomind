@@ -67,15 +67,15 @@ const Dashboard = () => {
   const accuracy = stats.gamesPlayed > 0 ? Math.round((stats.wins / stats.gamesPlayed) * 100) : 0;
 
   return (
-    <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 transition-colors">Dashboard</h1>
+    <div className="max-w-5xl mx-auto py-5 sm:py-8 px-4 sm:px-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-8 transition-colors">Dashboard</h1>
       
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 mb-8 transition-colors">
-        <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Welcome, {user?.displayName || 'Explorer'}!</h2>
-        <p className="text-gray-600 dark:text-gray-300">Here you can see your progress, streaks, and favorite countries.</p>
+      <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 mb-5 sm:mb-8 transition-colors">
+        <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-gray-900 dark:text-white">Welcome, {user?.displayName || 'Explorer'}!</h2>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Here you can see your progress, streaks, and favorite countries.</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-10">
         <div className="bg-blue-50 dark:bg-slate-800 border border-transparent dark:border-slate-700 p-4 rounded-xl transition-colors">
           <div className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-1">Total Games</div>
           <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{stats.gamesPlayed}</div>
@@ -94,14 +94,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">Your Favorites & Notes</h3>
+      <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 transition-colors">Your Favorites & Notes</h3>
       
       {favorites.length === 0 ? (
         <div className="bg-yellow-50 dark:bg-slate-800 text-yellow-800 dark:text-yellow-400 p-6 rounded-xl border border-yellow-200 dark:border-yellow-700 transition-colors">
           You haven't saved any countries yet. Win a round and save a country to see it here!
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {favorites.map(fav => (
             <div key={fav.docId} className="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-left p-5 rounded-2xl shadow-sm flex flex-col relative w-full transition-colors">
               <button onClick={() => handleDelete(fav.docId)} className="absolute top-4 right-4 text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors focus:outline-none">

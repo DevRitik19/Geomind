@@ -162,7 +162,7 @@ const GlobeMap = ({ countries = [], guesses, targetCountry, gameState }) => {
   }, [countries, cameraCenter, targetCountry, gameState]);
 
   return (
-    <div ref={containerRef} className="w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden glassmorphism flex items-center justify-center border border-white/10 shadow-2xl relative z-10">
+     <div ref={containerRef} className="w-full h-full min-h-[300px] sm:min-h-[380px] lg:min-h-0 rounded-2xl overflow-hidden glassmorphism flex items-center justify-center border border-white/10 shadow-2xl relative z-10">
        {dimensions.width > 0 && (
          <Globe
            ref={globeEl}

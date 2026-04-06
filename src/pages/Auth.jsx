@@ -48,8 +48,8 @@ const Auth = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800">
+    <div className="flex justify-center items-center min-h-[calc(100vh-200px)] py-4 px-4">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-800">
         <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-6">
           {isLogin ? 'Welcome Back!' : 'Join GeoGuesser'}
         </h2>
