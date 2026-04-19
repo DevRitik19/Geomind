@@ -1,6 +1,6 @@
 export const fetchCountries = async () => {
   try {
-    const response = await fetch("https://restcountries.com/v3.1/all?fields=name,capital,population,flags,region,latlng,cca3");
+    const response = await fetch("https://restcountries.com/v3.1/all?fields=name,capital,population,flags,region,subregion,languages,currencies,latlng,cca3");
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -11,6 +11,9 @@ export const fetchCountries = async () => {
       capital: country.capital?.[0] || 'Unknown',
       population: country.population,
       region: country.region,
+      subregion: country.subregion || 'Unknown',
+      languages: country.languages || null,
+      currencies: country.currencies || null,
       flag: country.flags.svg,
       lat: country.latlng[0],
       lng: country.latlng[1]

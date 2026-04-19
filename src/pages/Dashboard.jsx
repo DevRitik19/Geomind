@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState({ gamesPlayed: 0, wins: 0, streak: 0 });
   const [editingId, setEditingId] = useState(null);
   const [editNote, setEditNote] = useState("");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -20,9 +21,10 @@ const Dashboard = () => {
       const favs = [];
       snapshot.forEach((d) => favs.push({ ...d.data(), docId: d.id }));
       setFavorites(favs);
-    }, (error) => {
-      console.error("Snapshot Error (Favs):", error);
-      if(favorites.length === 0) alert("Dashboard Sync Error: " + error.message);
+      setError(null);
+    }, (err) => {
+      console.error("Snapshot Error (Favs):", err);
+      if(favorites.length === 0) setError("Dashboard Sync Error: " + err.message);
     });
 
     // Listen to Base User Stats
@@ -70,6 +72,15 @@ const Dashboard = () => {
     <div className="max-w-5xl mx-auto py-5 sm:py-8 px-4 sm:px-6">
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-5 sm:mb-8 transition-colors">Dashboard</h1>
       
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 p-4 rounded-xl mb-6 flex justify-between items-center transition-colors">
+          <p>{error}</p>
+          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+            <X className="w-5 h-5"/>
+          </button>
+        </div>
+      )}
+
       <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 mb-5 sm:mb-8 transition-colors">
         <h2 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2 text-gray-900 dark:text-white">Welcome, {user?.displayName || 'Explorer'}!</h2>
         <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Here you can see your progress, streaks, and favorite countries.</p>

@@ -1,6 +1,6 @@
 import { db, auth } from '../services/firebase';
 import { collection, addDoc } from 'firebase/firestore';
-import { Users, Building2, Map as MapIcon, Calendar, CheckCircle2, Bookmark, ExternalLink } from 'lucide-react';
+import { Users, Building2, Map as MapIcon, Coins, CheckCircle2, Bookmark, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const CountryCard = ({ country, onNextGame }) => {
@@ -52,10 +52,14 @@ const CountryCard = ({ country, onNextGame }) => {
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Calendar className="w-5 h-5 text-secondary mt-0.5" />
+            <Coins className="w-5 h-5 text-secondary mt-0.5" />
             <div>
-              <div className="text-xs text-slate-400 uppercase tracking-wider">Status</div>
-              <div className="font-medium text-slate-100 italic opacity-80">Classified</div>
+              <div className="text-xs text-slate-400 uppercase tracking-wider">Currency</div>
+              <div className="font-medium text-slate-100">
+                {country.currencies && Object.keys(country.currencies).length > 0
+                  ? Object.values(country.currencies)[0].name
+                  : 'Classified'}
+              </div>
             </div>
           </div>
         </div>

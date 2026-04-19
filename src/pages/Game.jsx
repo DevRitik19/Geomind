@@ -1,11 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { GameContext } from '../context/GameContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import GuessInput from '../components/GuessInput';
 import HintCard from '../components/HintCard';
 import CountryCard from '../components/CountryCard';
 import GlobeMap from '../components/GlobeMap';
-import { Globe2, RefreshCw, Lightbulb, Target } from 'lucide-react';
+import { Globe2, RefreshCw, Lightbulb, Target, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const Game = () => {
   const { 
@@ -14,10 +14,13 @@ const Game = () => {
     gameState, 
     guesses, 
     initialHint,
+    error,
     MAX_GUESSES, 
     targetCountry, 
     startNewGame 
   } = useContext(GameContext);
+
+  const [showLabels, setShowLabels] = useState(false);
 
   if (loading) {
     return (
@@ -33,6 +36,22 @@ const Game = () => {
       animate={{ opacity: 1 }}
       className="max-w-6xl mx-auto w-full relative flex flex-col lg:flex-row gap-4 md:gap-6 lg:gap-8 lg:h-[calc(100vh-140px)]"
     >
+      {/* Error notification */}
+      <AnimatePresence>
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -20, x: '-50%' }}
+            className="absolute top-4 left-1/2 z-50 bg-red-900/90 text-red-100 px-4 py-3 rounded-lg shadow-xl border border-red-500/30 backdrop-blur whitespace-nowrap"
+          >
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-red-400" />
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       {/* Dynamic Background Effects */}
       <div className="absolute inset-0 max-w-full h-full pointer-events-none overflow-hidden -z-10">
@@ -126,7 +145,15 @@ const Game = () => {
             <p className="text-xs sm:text-sm text-slate-300 ml-7 sm:ml-8 font-light">Locate the hidden territory</p>
           </div>
           
-          <div className="flex items-center gap-2 sm:gap-4 bg-slate-900/50 px-3 sm:px-4 py-2 rounded-xl border border-white/5">
+          <div className="flex items-center gap-2 sm:gap-4 bg-slate-900/50 px-3 sm:px-4 py-2 rounded-xl border border-white/5 shadow-inner">
+            <button 
+              onClick={() => setShowLabels(!showLabels)}
+              title={showLabels ? "Hide Country Names" : "Show Country Names"}
+              className="hidden sm:flex items-center justify-center p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors mr-2"
+            >
+              {showLabels ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+            <div className="w-px h-6 bg-slate-700/50 hidden sm:block mr-2"></div>
             <Target className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
             <span className="text-lg sm:text-xl font-bold">
               <span className="text-white">{guesses.length}</span>
@@ -136,20 +163,30 @@ const Game = () => {
         </motion.div>
 
         {/* Initial Hint Banner */}
-        {gameState === 'playing' && initialHint && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="glassmorphism border border-primary/30 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg mb-3 sm:mb-4 neon-shadow-blue"
+        <div className="flex items-center justify-between gap-2 mb-3 sm:mb-4">
+          {gameState === 'playing' && initialHint && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="glassmorphism border border-primary/30 px-4 py-2.5 rounded-2xl flex items-center gap-3 shadow-lg flex-1 neon-shadow-blue"
+            >
+              <Lightbulb className="w-5 h-5 text-primary shrink-0" />
+              <span className="font-medium text-slate-200 tracking-wide text-sm sm:text-base">{initialHint}</span>
+            </motion.div>
+          )}
+
+          {/* Mobile Label Toggle */}
+          <button 
+            onClick={() => setShowLabels(!showLabels)}
+            className="sm:hidden glassmorphism border border-white/10 p-2.5 rounded-2xl flex items-center justify-center text-slate-400 hover:text-white transition-colors"
           >
-            <Lightbulb className="w-5 h-5 text-primary shrink-0" />
-            <span className="font-medium text-slate-200 tracking-wide text-sm sm:text-base">{initialHint}</span>
-          </motion.div>
-        )}
+            {showLabels ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          </button>
+        </div>
 
         {/* The 3D Globe */}
         <div className="flex-1 relative w-full lg:h-full min-h-[300px] sm:min-h-[380px]">
-           <GlobeMap countries={countries} guesses={guesses} targetCountry={targetCountry} gameState={gameState} />
+           <GlobeMap countries={countries} guesses={guesses} targetCountry={targetCountry} gameState={gameState} showLabels={showLabels} />
         </div>
 
       </div>

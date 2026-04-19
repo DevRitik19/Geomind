@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Globe from 'react-globe.gl';
 import { calculateDistance } from '../utils/geometry';
 
-const GlobeMap = ({ countries = [], guesses, targetCountry, gameState }) => {
+const GlobeMap = ({ countries = [], guesses, targetCountry, gameState, showLabels }) => {
   const globeEl = useRef();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const containerRef = useRef();
@@ -119,26 +119,29 @@ const GlobeMap = ({ countries = [], guesses, targetCountry, gameState }) => {
     let visibleCountries = [];
     const { lat, lng, alt } = cameraCenter;
 
-    // LOD Calculations
-    if (alt > 1.8) {
-      // Zoomed out - show nothing
-      visibleCountries = [];
-    } else {
-      // Pool constraint based on altitude
-      let pool = alt > 0.8 ? countries.filter(c => c.population > 20000000) : countries;
-      
-      // Calculate distances to camera perspective center
-      const withDistance = pool.map(c => ({
-        ...c,
-        distToCenter: calculateDistance(lat, lng, c.lat, c.lng)
-      }));
+    // Only process labels if showLabels is true (or game is over and target is shown)
+    if (showLabels) {
+      // LOD Calculations
+      if (alt > 1.8) {
+        // Zoomed out - show nothing
+        visibleCountries = [];
+      } else {
+        // Pool constraint based on altitude
+        let pool = alt > 0.8 ? countries.filter(c => c.population > 20000000) : countries;
+        
+        // Calculate distances to camera perspective center
+        const withDistance = pool.map(c => ({
+          ...c,
+          distToCenter: calculateDistance(lat, lng, c.lat, c.lng)
+        }));
 
-      // Sort mathematically nearest first
-      withDistance.sort((a, b) => a.distToCenter - b.distToCenter);
+        // Sort mathematically nearest first
+        withDistance.sort((a, b) => a.distToCenter - b.distToCenter);
 
-      // Slicing strictly to prevent clutter & overlap!
-      const limit = alt > 0.8 ? 6 : 10;
-      visibleCountries = withDistance.slice(0, limit);
+        // Slicing strictly to prevent clutter & overlap!
+        const limit = alt > 0.8 ? 6 : 10;
+        visibleCountries = withDistance.slice(0, limit);
+      }
     }
 
     // Process specific target if game over
@@ -159,7 +162,7 @@ const GlobeMap = ({ countries = [], guesses, targetCountry, gameState }) => {
     }
 
     return finalLabels;
-  }, [countries, cameraCenter, targetCountry, gameState]);
+  }, [countries, cameraCenter, targetCountry, gameState, showLabels]);
 
   return (
      <div ref={containerRef} className="w-full h-full min-h-[300px] sm:min-h-[380px] lg:min-h-0 rounded-2xl overflow-hidden glassmorphism flex items-center justify-center border border-white/10 shadow-2xl relative z-10">
